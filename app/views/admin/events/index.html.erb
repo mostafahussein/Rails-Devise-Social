@@ -1,0 +1,34 @@
+<div id="main-left-wrapper">
+	<h1><%= t(:events) %></h1>
+	<div id="leads-search-wrapper">
+		<%= form_tag(admin_events_path, remote: true) do %>
+			<%= label_tag 'name', "Search", for: "q" %>
+    	<%= text_field_tag 'q', nil, placeholder: 'Enter your search query here' %>
+    	<%= submit_tag "Go", disable_with: "Please wait..."%>
+		<% end %>
+	</div>
+	<% @messages.each do |message| %>
+		<div class="event">
+			<h4><%= message.subject %></h4>
+			<div class="icon">
+				<%= image_tag message.sender.image.url if message.sender.image %>
+			</div>
+			<div class="description"><blockquote><%= message.body %></blockquote></div>
+			<span class="send_at"><%= message.posted_ago %></span>
+			<ul class="attachments unstyled">
+				<% message.attachments.each do |attachment| %>
+					<li>
+						<%= link_to attachment.file_name, attachment.file.url %>
+					</li>
+				<% end %>
+			</ul>
+		</div>
+	<% end %>
+	<%= paginate @messages %>
+</div>
+</div>
+
+<!-- <div id="main-right-wrapper">
+</div> -->
+
+<div class="clr"></div>

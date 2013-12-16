@@ -1,0 +1,35 @@
+<div id="main-left-wrapper">
+	<h1><%= t(:leads) %></h1>
+	<div id="leads-search-wrapper">
+		<%= form_tag(admin_leads_path, remote: true) do %>
+			<%= label_tag 'name', "Search", for: "q" %>
+    	<%= text_field_tag 'q', nil, placeholder: 'Enter your search query here' %>
+    	<%= submit_tag "Go", disable_with: "Please wait..."%>
+		<% end %>
+	</div>
+	<% @projects.each do |project| %>
+		<div class="project-quote">
+			<h4><%= project.title %></h4>
+			<div class="icon">
+				<%= image_tag project.user.image.url if project.user.image %>
+			</div>
+			<span>
+				Budget:
+				<%= number_to_currency(project.budget, unit: project.currency) %>
+			</span>
+			<span>
+				Region:
+				<%= project.region.name if project.region %>
+			</span>
+			<p class="description"><%= project.description %></p>
+			<%=link_to "read more", nil %>
+			<input type="button" value="Buy"/>
+		</div>
+	<% end %>
+	<%= paginate @projects %>
+</div>
+
+<!-- <div id="main-right-wrapper">
+</div> -->
+
+<div class="clr"></div>

@@ -1,0 +1,114 @@
+<div id="main-left-wrapper">
+	<h1><%= t(:projects) %></h1>
+	<div id="leads-search-wrapper">
+		<%= form_tag(admin_leads_path, remote: true) do %>
+			<%= label_tag 'name', "Search", for: "q" %>
+    	<%= text_field_tag 'q', nil, placeholder: 'Enter your search query here' %>
+    	<%= submit_tag "Go", disable_with: "Please wait..."%>
+		<% end %>
+	</div>
+	<% @projects.each do |project| %>
+		<div class="project">
+			<div class='left_block'>
+				<h4><%= project.title %></h4>
+				<div class="icon thumbnail-container">
+					<%= image_tag project.user.image.url if project.user.image %>
+				</div>
+				<span>
+					Budget:
+					<%= number_to_currency(project.budget, unit: project.currency) %>
+				</span>
+				<span>
+					Region:
+					<%= project.region.name if project.region %>
+				</span>
+				<% desc = "Posted #{project.posted_ago}" %>
+				<% desc += " in Category #{project.category.name}" if project.category %>
+				<p class="description"><%= desc %></p>
+			</div>
+			<div class='right_block'>
+				<span class="status <%= project.status %>"><%= project.status ? t('project.status.' + project.status) : 'N/A' %></span>
+			</div>
+			<div class="conversation">
+				<% project.messages.each_with_index do |message, i| %>
+					<div class="company-container">
+						<% c = message.sender.company %>
+						<div class="thumbnail-container">
+							<%= image_tag c.cover_image.url if c.cover_image %>
+						</div>
+						<div class="company-details-container">
+							<div class="company-name-container">
+              	<p class="company-name"><%= c.name %></p>
+              </div>
+              <div class="company-rating-container">
+				        <div class="star readonly" score="<%= c.rating %>"></div>
+				      </div>
+						</div>
+						<div class="message-body"><blockquote><%= message.body %></blockquote></div>
+						<div class="tab-container" id="tab-container-<%= c.id %>">
+				    <ul class="etabs">
+				      <li class="tab active">
+				        <a href="#tabs1-intro" class="active">Intro</a>
+				      </li>
+				      <li class="tab"><a href="#tabs-kontakt-<%= c.id %>">Kontakt</a></li>
+				      <li class="tab"><a href="#tabs-katalog-<%= c.id %>">Katalog</a></li>
+				      <li class="tab"><a href="#tabs-abbildungen-<%= c.id %>">Abbildungen</a></li>
+				      <li class="tab"><a href="#tabs-referenzen-<%= c.id %>">Referenzen</a></li>
+				      <li class="tab"><a href="#tabs-news-<%= c.id %>">News</a></li>
+				    </ul>
+						<div class="panel-container">
+				      <div id="tabs-intro-<%= c.id %>" style="display: block;" class="active">
+				       <p><%= raw c.description %></p>
+				      </div>
+				       <div id="tabs-kontakt-<%= c.id %>" style="display: none;">
+				       <p>
+				        <%= c.contact_person %>,
+				        <%= c.email %>,
+				        <%= c.websites.join(",") %>,
+				        <%= c.phone_numbers.join(",") %>,
+				        <%= c.address %>,
+				        <%= c.postal_code %>
+				       </p>
+				      </div>
+				      <div id="tabs-katalog-<%= c.id %>" style="display: none;">
+				      <p>die passenden Anbieter fir Ihr Projekt.</p>
+				      </div>
+				      <div id="tabs-abbildungen-<%= c.id %>" style="display: none;">
+				      <p>Anbieter fir Ihr Projekt.</p>
+				      </div>
+				      <div id="tabs-referenzen-<%= c.id %>" style="display: none;">
+				      <p>Finden Sie mit wenigen Mausklicks die passenden</p>
+				      </div>
+				      <div id="tabs-news-<%= c.id %>" style="display: none;">
+				      <p>Finden Sie mit wenigen</p>
+				      </div>
+				    </div>
+				    </div>
+						<div class="clr"></div>
+						<div class="company-tags-container">
+				    <% c.tags.each do |t| %>
+				      <div class="company-tags">
+				      <%= link_to company_index_url(:region => c.region, :tag => t.name) do %>
+				        <%= t.name %>
+				      <% end %>
+				      </div>
+				    <% end %>
+				    </div>
+						<div class="clr"></div>
+						<div class="action">
+							<input type="button" class="btn btn-success" value="Accept"/>
+							<input type="button" class="btn btn-danger" value="Reply"/>
+						</div>
+						<div class="clr"></div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	<% end %>
+	<%= paginate @projects %>
+</div>
+
+<!-- <div id="main-right-wrapper">
+</div> -->
+
+<div class="clr"></div>

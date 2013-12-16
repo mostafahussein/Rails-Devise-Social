@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+  <head>
+    <%= render :partial => 'layouts/head' %>
+    <%= yield :head %>
+  </head>
+  <body>
+    <div id="header-line"></div>
+    <div id="header-wrapper">
+      <%= render :partial => 'layouts/header' %>
+    </div>
+    <div class="clr"></div>
+    <%= yield :banner %>
+
+    <div id="main-content-wrapper" class="clearfix">
+      <%= render :partial => 'layouts/errors_and_notices' %>
+      <% if user_signed_in? && current_user.admin? %>
+          <div id="admin-menu-wrapper">
+            <%= render :partial => 'layouts/admin_header' %>
+          </div>
+      <% end %>
+
+      <div class="breadcrumb">
+      	<% opts = {:builder => BreadcrumbsCustomBuilder}%>
+        <%= render_breadcrumbs opts %>
+      </div>
+
+      <%= yield %>
+
+    </div>
+      <%= render :partial => 'layouts/footer' %>
+    <div id="header-line"></div>
+  </body>
+</html>  

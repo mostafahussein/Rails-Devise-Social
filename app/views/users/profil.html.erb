@@ -1,0 +1,62 @@
+<div class="main-left-wrapper">
+    <%= form_for @user, :url => profil_users_path,
+                 :html => {:id => 'user_edit_profile_form', :class => 'edit_user auto_validation_form'} do |f| %>
+        <div class="clearfix">
+            <%= f.label :name %>
+            <%= f.text_field :name %>
+        </div>
+		<div class="clearfix">
+            <%= f.label :email %>
+            <%= f.text_field :email %>
+        </div>
+		<div class="clearfix">            
+            <%= check_box_tag :notification %> Enable notification            
+        </div>
+        <div class="clearfix">
+        	<br/>
+        </div>
+        <div class="clearfix">
+            <%= f.label :password %>
+            <%= f.password_field :password %>
+        </div>        
+        <div class="clearfix">
+            <%= f.label :image %>
+            <% if @user.image_uid %>
+                <%= image_tag @user.image.thumb('200x140').url if @user.image_uid %>
+            <% else %>
+                <%= image_tag 'company-icon.jpg' %>
+            <% end %>
+        </div>
+        <div class="clearfix">
+            <%= f.file_field :image %>
+        </div>
+
+        <div class="clearfix">
+            <%= f.label :description %>
+            <%= f.text_area :description, :rows => 5 %>
+        </div>
+		<div class="clearfix">
+			<br />			
+		</div>
+		
+        <div class="clearfix">
+            <%= label_tag :company %>
+            
+            <% if @company.nil? %>
+            	<%= link_to company_add_url, :class => '' do %>
+	            	<span id="span"> Register Company </span>
+	            <% end %>            
+            <% else %>            
+	            <%= link_to company_users_path, :class => '' do %>
+	            	<span id="span"> <%= @company["name"] %> </span>
+	            <% end %>            
+            <% end %>
+        </div>        
+		<div class="clearfix">
+			<br />			
+		</div>
+        <div class="clearfix">
+            <%= f.submit 'save' %>
+        </div>
+    <% end %>
+</div>

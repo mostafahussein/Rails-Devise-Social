@@ -1,0 +1,136 @@
+<% content_for :head do %>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.tab-container').easytabs();
+    });
+  </script>
+<% end %>
+<!-------------------------------------->
+<% unless response.status==404 %>
+    <%= content_for :banner do %>
+      <div id="banner-wrapper">
+        <div id="banner-wrapper-inner">
+
+            <div id="banner-left-wrapper">
+                <img src="/assets/old-lady.png" width="251" height="353" />
+                  <p style="margin-top:-45px;">“Comparendo hat für uns sehr schnell mehrere attraktive Offerten gefunden, vielen Dank nochmals.” <br />
+      <em>~Regina Stauffenbach, SZ</em></p>
+              </div>
+              <div id="banner-right-wrapper">
+                <h1>Finden Sie mit uns die besten<br />Anbieter für Ihr Projekt. </h1>
+                  <div id="banner-list-wrapper">
+                    <ul>
+                        <li>Auf Knopfdruck 3-5 qualitativ hochwertige Offerten</li>
+                        <li>Wir suchen für Sie unter den besten Profis Ihrer Region</li>
+                        <li>Kompetente und kostenfreie Beratung inklusive</li>
+                      </ul>
+                  </div>
+                  <div class="clr"></div>
+                <%= button_to "Jetzt Starten", new_offer_path, :id => "start-btn", :class => "jetztbutton", :method => :get %>
+              </div>
+          </div>
+      </div>
+    <% end %>
+<% end %>
+<!-------------------------------------      -->
+<div id="main-left-wrapper">
+  <% unless response.status==404 %>
+  <!--///////////////////////////-->
+  <h2><%= t('home_page.title') %></h2>
+  <p style='padding-right: 20px;'><%= t('home_page.intro') %></p>
+
+  <br />
+
+  <div id="searchtable">
+    <%= form_tag company_index_url, :method => :get do %>
+      <%= t(:im_looking_for) %>
+        <%= text_field_tag "q", "Solaranlagen",
+                           {:id=>"industry", :class=>"gray autocomplete clearme",
+                            :data => {:autocomplete_source=>autocomplete_category_subcategory_synonym_path}} %>
+
+
+        in
+        <%= text_field_tag "region", "Zürich",
+                           {:id=>"area", :class=>"gray clearme autocomplete",
+                            :data => {:autocomplete_source=>autocomplete_region_city_path}} %>
+
+
+        <input id="search" value="<%= t('general.find') %>" type="submit" class="button">
+    <% end %>
+  </div>
+
+  <br />
+
+  <br />
+
+  <div id="map-switzerland" style="z-index:1;">
+    <ul class="switzerland">
+      <% Country.where(:name => 'Switzerland').first.regions.order(:name).each_with_index do |r,i| %>
+        <li class="ch<%= i+1 %>">
+          <a href="javascript:mapClick('<%= r.name %>')"><%= r.name %></a>
+        </li>
+      <% end %>
+
+    </ul>
+  </div>
+
+  
+  
+<% else %>
+  <div id="banner-wrapper">
+    <div id="err-wrapper">
+    
+      <div id="main-left-wrapper">
+          <h2>Seite nicht gefunden</h2>
+          
+          <p>
+          Die von Ihnen angeforderte Seite existiert nicht. Vielleicht haben Sie sich vertippt, oder die Website-Struktur hat sich
+          geändert. Falls Sie denken, dass diese Seite existieren sollte, oder Sie automatisch hierhin gelangt sind, benachrichtigen
+          Sie uns bitte über das <a href='/kontakt'>Kontaktformular</a>.
+          
+          </p>
+      </div>
+      
+    </div>
+  </div>
+<% end %>
+  <!--////////////////////////////-->
+</div>
+
+
+<div id="main-right-wrapper">
+
+
+  <%= render "layouts/how_does_it_work"%>
+  
+  <div class="clr"><br><br><br></div>
+
+  <%= render "layouts/latest_news"%>
+
+  <div class="clr"><br><br><br></div>  
+
+  <%= render "layouts/top_providers"%>
+
+
+</div>
+<div class="clr"></div>
+<script>
+
+  $('#map-switzerland').cssMap({
+    'size' : 660,
+    'cities' : true,
+    'searchUrl' : 'search',
+    'loadingText' : 'Lade...',
+    'onClick': function(e) {
+
+    }
+
+  });
+
+</script>
+
+
+
+
+
+

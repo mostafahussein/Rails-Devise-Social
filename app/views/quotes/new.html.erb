@@ -1,0 +1,119 @@
+<div id="main-left-wrapper">
+    <h2>Geben Sie nun bitte einige zusätzliche Informationen zu Ihrem Projekt an</h2>
+    <% url = @project.new_record? ? create_quote_details_path :  project_path(@project) %>
+    <%= form_for @project, url: url, html: {id: 'quote_details_form'} do |f| %>
+
+        <% @subcategory.questions.each do |q| %>
+            <label>
+              <%= q.description %>
+              <% if q.is_mandatory? %>
+                <abbr title="mandatory">*</abbr>
+              <% end %>
+            </label>
+            <% answered=[] %>
+            <% answered = @project.project_options.map{|po| po.option if po.option && po.option.question_id==q.id }.compact %>
+            <%= build_project_option_field(@project, q, answered) %>
+            <% unless @project.errors.messages[:"quotes_#{q.id}"].blank? %>
+              <label for="project_description" generated="true" class="error">
+                <%= @project.errors.messages[:"quotes_#{q.id}"].join(',') %>
+              </label>
+            <% end %>
+            <hr>
+        <% end %>
+
+        <div class="clearfix margintop50px">
+            <%= f.label t('.description') %>
+            <%= f.text_area :description, :rows => 5 %>
+        </div>
+
+        <!-- TODO numeric field + currency field, default 1000 CHF -->
+        <div class="clearfix budget border-section">
+            <%= f.label t('.budget') %>
+            <%= f.text_field :budget, value: "1000", class: "clearme" %>
+            <%= f.select(:currency, [['CHF', "CHF"], ['EUR', "EUR"], ['USD', "USD"]],{:class => "clearme", :multiple => false})%>
+        </div>
+
+        <!-- TODO timeframe (Start-End, two calendar selects) -->
+        <div class="clearfix timeframe border-section">
+            <label><%=t('.time_frame')%></label>
+            <div>
+                <%= f.label t('.start_date') %>
+                <%= f.text_field :start_date, class: "calendar" %>
+                <%= f.label t('.end_date') %>
+                <%= f.text_field :end_date, class: "calendar" %>
+            </div>
+        </div>
+      <div class="clearfix border-section">
+          <div id="location-toggle-button">
+            <% if @region %>
+              <input type="checkbox" checked="checked"/>
+              <input type="hidden" name="project[region_id]" id="project_region_id" value="<%= @region.id %>"/>
+            <% else %>
+              <input type="checkbox"/>
+              <input type="hidden" name="project[region_id]" id="project_region_id" value=""/>
+            <% end %>
+          </div>
+          <% if @region %>
+            <%= select_tag :region, options_for_select(Region.all.map{|r| [r.name, r.id]}, @region.id ), :title => t('hints.website'),:data => {:placement=>'right'}, :class => "add_tooltip" %>
+          <% else %>
+            <%= select_tag :region, options_for_select(Region.all.map{|r| [r.name, r.id]}), style: "display: none;" , :title => t('hints.website'),:data => {:placement=>'right'}, :class => "add_tooltip"%>
+          <% end %>
+        </div>
+
+        <div class="clearfix border-section tags">
+          <%= f.label t('company_form.specialties') %>
+          <% specialties = @project.tags.map(&:name).join(",") %>
+          <%= text_field_tag "project[specialties]", specialties, {:class => 'tagsinputtable tooltippable',
+          :data => {:autocomplete_source=>autocomplete_company_specialties_path}} %>
+        </div>
+        <hr>
+        <%= f.hidden_field :subcategory_id, value: @subcategory.id %>
+        <%#= f.hidden_field :region_id, value: @region.id if @region %>
+        <%= f.hidden_field :id, value: @project.id unless @project.new_record? %>
+        <div class="clearfix">
+            <%= f.submit 'Weiter' %>
+        </div>
+    <% end %>
+</div>
+
+<div id="main-right-wrapper">
+  <h3><%= t(:how_does_it_work) %></h3>
+  <ul>
+    <li class="one-bul"><a href="#">Kurzes Formular</a></li>
+    <li class="two-bul"><a href="#">Abschicken</a></li>
+    <li class="three-bul"><a href="#">3 Offerten erhalten</a></li>
+  </ul>
+
+  <div class="clr"><br><br><br></div>
+
+  <%= render "layouts/latest_news"%>
+
+  <div class="clr"><br><br><br></div>
+
+  <h3>Top-Anbieter:</h3>
+  <ul>
+    <li><a href="#">Geprüft durch uns</a></li>
+    <li><a href="#">Hintergrund-Check</a></li>
+    <li><a href="#">Interview</a></li>
+  </ul>
+  
+</div>  
+
+<div class="clr"></div>
+<script type="text/javascript">
+  $(function() {
+    $("input[type=checkbox]").click(function(){
+      var arr = this.id.split("_");
+      var indx = arr[4];
+      if ($("#project_project_options_attributes_"+indx+"_id").length > 0) {
+        if($(this).is(":checked")) {
+          $("[name='project[project_options_attributes]["+indx+"][_destroy]']").remove();
+        } else {
+          $(this).parent().append(
+            $('<input/>', {'name': "project[project_options_attributes]["+indx+"][_destroy]", 'type':'hidden', 'value': 1})
+          )
+        }
+      }
+    });
+  });
+</script>

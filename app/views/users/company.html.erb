@@ -1,0 +1,76 @@
+<h1> My Company </h1>
+
+    <%= form_for @company, :url => company_users_path,
+                 :html => {:id => 'user_edit_profile_form', :class => 'edit_user auto_validation_form'} do |f| %>
+        <div class="clearfix">
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "tooltippable add_tooltip", :title => t('hints.official_company_name'),            
+            :class => "tooltippable add_tooltip" ,
+            "data-placement" => "right",  "data-trigger" => "focus"  
+             %>
+        </div>
+		<div class="clearfix">
+            <%= f.label :address %>
+            <%= f.text_field :address, :class => "tooltippable add_tooltip", :title => t('hints.address'), 
+            :class => "tooltippable add_tooltip" ,
+            "data-placement" => "right",  "data-trigger" => "focus"
+             %>
+        </div>
+
+		<div class="clearfix">
+            <%= f.label :email %>
+            <%= f.text_field :email, :class => "tooltippable add_tooltip", :title => t('hints.email'),
+            :class => "tooltippable add_tooltip" ,
+            "data-placement" => "right",  "data-trigger" => "focus"            
+             %>
+        </div>
+        
+        <div class="clearfix">
+        	<%= f.label :region %>
+        	<%= select_tag("company[region_id]", options_from_collection_for_select(Region.all, "id", "name", @company.region_id ) )%>
+        </div>          
+        <div class="clearfix">
+        	<%= f.label :city %>
+        	<%= select_tag("company[city_id]", options_from_collection_for_select(City.all, "id", "name", @company.city_id ) )%>
+        </div>        
+        
+        <div class="clearfix">
+            <%= f.label :phone_numbers %>
+            <%= text_field_tag "company[phone_numbers][]", @company["phone_numbers"], 
+            :title => t('hints.website'), 
+            :class => "tooltippable add_tooltip" ,
+            "data-placement" => "right",  "data-trigger" => "focus"
+            
+            %>
+        </div>
+        <div class="clearfix">
+            <label class="form-label"><%= t(:website) %></label>
+  				<% unless @company.websites.nil? %>
+					<% @company.websites.each do |website| %>
+			  			<div class="control-group">
+							<input class="company_website tooltippable add_tooltip" name="company[websites][]" type="text"
+			       				title="<%= t('hints.website') %>"
+			       			value="<%= website %>" data-placement="right" data-trigger='focus'/>
+			  			</div>
+					<% end %>
+			  <% end %>
+        </div>
+        <div class="clearfix">
+            <%= f.label :postal_code %>
+            <%= f.text_field :postal_code, :class => "tooltippable", :title => t('hints.postal_code'),
+            :class => "tooltippable add_tooltip" ,
+            "data-placement" => "right",  "data-trigger" => "focus"
+             %>
+        </div>
+        <div class="clearfix">
+            <%= f.label :description %>
+            <%= f.text_area :description, :rows => 5, :title => t('hints.phone'), :class => "tooltippable",
+            :class => "tooltippable add_tooltip" ,
+            "data-placement" => "right",  "data-trigger" => "focus"
+            %>
+        </div>
+        
+        <div class="clearfix">
+            <%= f.submit 'save' %>
+        </div>
+    <% end %>

@@ -1,0 +1,39 @@
+<div id="main-left-wrapper">
+
+	<% @articles.each do |article| %>
+		<div class="<%= cycle('odd', 'even')%>">
+			<article class="desc">
+				<%= link_to({:controller => :article, :action => :show, :path => article.path}) do %>
+					<%= image_tag article.thumb_image.url if article.has_cover_image? %>
+					<h2><%= article.title %></h2>
+				<% end %>
+				<p><%= raw article.short_description %></p>
+			</article>
+			<% unless article.tags.blank? %>
+				<div class="tags">Tags:
+					<% tags = [] %>
+				    <% article.tags.split(",").each do |tag| %>
+				        <% tags << link_to(tag, nil) %>
+				    <% end %>
+				    <%= tags.join(", ").html_safe %>
+				</div>
+			<% end %>
+			<% if can? :update, article %>
+			    <%= link_to "Edit", edit_admin_article_path(article) %>
+			<% end %>
+			<% if can? :destroy, article %>
+			    <%= form_for([:admin, article], :method => 'delete') do |f| %>
+			        <%= f.submit('delete') %>
+			    <% end %>
+			<% end %>
+		</div>
+	<% end %>
+	<%= paginate @articles %>
+    
+</div>
+
+<div id="main-right-wrapper">
+    
+	<%= render "layouts/latest_news"%>
+    
+</div>

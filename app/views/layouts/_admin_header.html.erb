@@ -1,0 +1,18 @@
+<div id="admin-menu">
+  <%= tabs_tag open_tabs: {class: "nav nav-pills"} do |tab| %>
+      <%= tab.events "Events", admin_events_path %>
+      <%= tab.approvals "Approvals", nil %>
+      <%= tab.leads "Leads", admin_leads_path if can?(:show, :leads) %>
+      <%= tab.projects "Projekte", admin_projects_path %>
+      <%= tab.users "User", nil %>
+      <%= tab.companies "Firmen", nil %>      
+      
+      <%= tab.profile "Profil", profil_users_path %>
+      <%= tab.profile "Billing", billing_users_path %>
+            
+      <% if can? :create, Article %>
+            <%= tab.profile "Neuer Artikel", new_admin_article_path %>                       
+      <% end %>
+
+  <% end %>
+</div>

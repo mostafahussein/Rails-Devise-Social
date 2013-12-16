@@ -1,0 +1,46 @@
+<h1> Billing </h1>
+
+<%= form_for @user, :url => billing_users_path,
+                 :html => {:id => 'user_edit_profile_form', :class => 'edit_user auto_validation_form'} do |f| %>
+
+	<div class="clearfix">
+		
+		<%= label_tag :payment_method %>
+		<%= select_tag("billing[payment_method_id]", 
+			options_from_collection_for_select( PaymentMethod.all, "id", "method", (@user_billing.nil?) ? '' : @user_billing.payment_method_id )) %>
+			
+	</div>
+	
+	<div class="paypal_form">
+		<%= f.label :paypal_address %>
+		<%= text_field_tag :paypal_address %>
+	</div>	
+	<div class="creditcard_form">
+		<div class="clearfix">
+			<%= f.label :creditcard_type %>	
+			<%= select_tag("billing[creditcard_id]", 
+				options_from_collection_for_select( CreditcardType.all, "id", "name", '1' )) %>
+		</div>
+		<div class="clearfix">
+			<%= f.label :exp_year %>
+			<%= text_field_tag :exp_year %>			
+		</div>
+		<div class="clearfix">
+			<%= f.label :exp_month %>
+			<%= text_field_tag :exp_month %>			
+		</div>
+		<div class="clearfix">
+			<%= f.label :cvv2 %>
+			<%= text_field_tag :cvv2 %>			
+		</div>
+	</div>
+	<div class="banktransfer_form">
+		<div class="clearfix">
+			<%= f.label :bank_transfer %>
+			<%= text_field_tag :bank_transfer %>			
+		</div>
+	</div>		
+	<div class="clearfix">
+		<%= f.submit 'save' %>
+    </div>
+<% end %>
